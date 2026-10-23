@@ -1,0 +1,294 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black">
+<meta name="apple-mobile-web-app-title" content="Duo截图">
+<meta name="theme-color" content="#0b0b0d">
+<title>iPhone Duo 截图</title>
+<style>
+/* Layout: one column on phones — preview on top, controls below; two columns on wide screens */
+:root {
+  --bg: #f2f2f4; --panel: #ffffff; --fg: #141416; --muted: #6b6b73;
+  --line: #dcdce2; --accent: #2f6bff; --accent-fg: #ffffff; --stage: #e4e4ea;
+  --font: -apple-system, BlinkMacSystemFont, "SF Pro Text", "PingFang SC", "Helvetica Neue", "Noto Sans SC", sans-serif;
+  --mono: ui-monospace, "SF Mono", Menlo, monospace;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --bg: #0b0b0d; --panel: #17171a; --fg: #f2f2f5; --muted: #8e8e97;
+  --line: #2a2a30; --accent: #5b8bff; --accent-fg: #ffffff; --stage: #121215; color-scheme: dark } }
+:root[data-theme="dark"] {
+  --bg: #0b0b0d; --panel: #17171a; --fg: #f2f2f5; --muted: #8e8e97;
+  --line: #2a2a30; --accent: #5b8bff; --accent-fg: #ffffff; --stage: #121215; color-scheme: dark }
+body { background: var(--bg); color: var(--fg); font-family: var(--font); }
+.wrap { max-width: 980px; margin: 0 auto; padding-block: 20px 40px;
+  padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
+header { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; flex-wrap: wrap; margin-bottom: 16px; }
+h1 { font-size: 22px; margin: 0; letter-spacing: -0.01em; }
+.sub { color: var(--muted); font-size: 13px; margin: 4px 0 0; }
+.grid { display: grid; grid-template-columns: 1fr; gap: 16px; }
+@media (min-width: 760px) { .grid { grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr); align-items: start; } }
+.stage { background: var(--stage); border-radius: 18px; padding: 16px; display: flex; flex-direction: column; align-items: center; gap: 10px; min-width: 0; }
+.stage img { display: block; max-width: 100%; max-height: 70vh; border-radius: 6px; box-shadow: 0 6px 24px rgba(0,0,0,.25); }
+.tag { font-size: 12px; color: var(--muted); }
+.panel { background: var(--panel); border: 1px solid var(--line); border-radius: 18px; padding: 16px; display: flex; flex-direction: column; gap: 16px; min-width: 0; }
+.row { display: flex; flex-direction: column; gap: 8px; }
+.row > label, .lbl, .lbl-line label { font-size: 13px; color: var(--muted); }
+.lbl-line { display: flex; justify-content: space-between; align-items: baseline; }
+.val { font-family: var(--mono); font-size: 13px; color: var(--fg); font-variant-numeric: tabular-nums; }
+input[type="text"] { font: 600 17px var(--mono); padding: 10px 12px; border-radius: 10px; border: 1px solid var(--line); background: var(--bg); color: var(--fg); width: 100%; box-sizing: border-box; }
+input[type="range"] { width: 100%; accent-color: var(--accent); }
+.seg { display: flex; border: 1px solid var(--line); border-radius: 10px; overflow: hidden; }
+.seg button { flex: 1; padding: 9px 4px; border: 0; background: transparent; color: var(--fg); font: 500 14px var(--font); cursor: pointer; }
+.seg button + button { border-left: 1px solid var(--line); }
+.seg button[aria-pressed="true"] { background: var(--accent); color: var(--accent-fg); }
+.btn { display: flex; align-items: center; justify-content: center; gap: 8px; padding: 14px; border-radius: 12px; font: 600 16px var(--font); border: 0; cursor: pointer; width: 100%; }
+.btn.primary { background: var(--accent); color: var(--accent-fg); }
+.btn.ghost { background: transparent; color: var(--fg); border: 1px solid var(--line); }
+.btn:focus-visible, .seg button:focus-visible, input:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.btn[disabled] { opacity: .45; cursor: default; }
+.actions { display: flex; flex-direction: column; gap: 10px; }
+.msg { font-size: 13px; color: var(--muted); min-height: 1.2em; margin: 0; }
+#file { position: absolute; width: 1px; height: 1px; opacity: 0; pointer-events: none; }
+  :root { padding-top: env(safe-area-inset-top, 0px); padding-bottom: env(safe-area-inset-bottom, 0px); }
+  body { margin: 0; font-size: 14px; }
+  [hidden] { display: none !important; }
+</style>
+</head>
+<body>
+
+<div class="wrap">
+  <header>
+    <div>
+      <h1>iPhone Duo 截图</h1>
+      <p class="sub">普通 iPhone 截图 → 右侧竖排状态栏的 Duo 样式，全部在手机本地处理</p>
+    </div>
+  </header>
+
+  <div class="grid">
+    <section class="stage">
+      <img id="result" alt="转换后的截图预览">
+      <span class="tag" id="srcTag">示例截图 · 选一张你的截图替换</span>
+    </section>
+
+    <section class="panel">
+      <input type="file" id="file" accept="image/*">
+      <button class="btn primary" id="pick" type="button">选择截图</button>
+
+      <div class="row">
+        <label for="time">时间</label>
+        <input type="text" id="time" value="11:04" inputmode="numeric" maxlength="8" autocomplete="off">
+      </div>
+
+      <div class="row">
+        <div class="lbl-line"><label for="battery">电量环</label><span class="val" id="batteryVal">45%</span></div>
+        <input type="range" id="battery" min="0" max="100" value="45">
+      </div>
+
+      <div class="row">
+        <span class="lbl">信号点（亮几个）</span>
+        <div class="seg" id="signal" role="group" aria-label="信号点">
+          <button type="button" data-v="0" aria-pressed="true">0</button>
+          <button type="button" data-v="1" aria-pressed="false">1</button>
+          <button type="button" data-v="2" aria-pressed="false">2</button>
+          <button type="button" data-v="3" aria-pressed="false">3</button>
+          <button type="button" data-v="4" aria-pressed="false">4</button>
+        </div>
+      </div>
+
+      <div class="row">
+        <span class="lbl">顶部状态栏裁剪</span>
+        <div class="seg" id="topbar" role="group" aria-label="状态栏高度">
+          <button type="button" data-v="59" aria-pressed="true">灵动岛机型</button>
+          <button type="button" data-v="47" aria-pressed="false">刘海机型</button>
+          <button type="button" data-v="0" aria-pressed="false">不裁</button>
+        </div>
+      </div>
+
+      <div class="actions">
+        <button class="btn primary" id="save" type="button">保存图片</button>
+        <p class="msg" id="msg">也可以直接长按预览图保存</p>
+      </div>
+    </section>
+  </div>
+</div>
+
+<script>
+(() => {
+  const $ = (id) => document.getElementById(id);
+  const state = { img: null, isSample: true, time: "11:04", battery: 0.45, signal: 0, topPt: 59, name: "duo" };
+  let lastBlob = null, lastUrl = null;
+
+  // ---------- sample screenshot (1179×2556, dark list UI) ----------
+  function makeSample() {
+    const c = document.createElement("canvas"); c.width = 1179; c.height = 2556;
+    const g = c.getContext("2d");
+    g.fillStyle = "#111111"; g.fillRect(0, 0, 1179, 2556);
+    g.fillStyle = "#fff"; g.font = "600 51px -apple-system, sans-serif"; g.textBaseline = "middle";
+    g.fillText("11:04", 120, 90);
+    g.textAlign = "center"; g.font = "600 52px -apple-system, 'PingFang SC', sans-serif";
+    g.fillText("示例", 590, 250);
+    const items = [["#e9634f","相册"],["#f2a33a","日历"],["#4cb3ff","天气"],["#57c96a","地图"],["#a77bff","备忘录"],["#ff6b8f","音乐"],["#3fd0c9","健康"]];
+    let y = 380;
+    items.forEach(([col, t], i) => {
+      if (i === 2 || i === 4 || i === 6) y += 26;
+      g.fillStyle = "#1c1c1e"; g.fillRect(0, y, 1179, 168);
+      g.fillStyle = col; g.beginPath(); g.arc(90, y + 84, 34, 0, Math.PI * 2); g.fill();
+      g.textAlign = "left"; g.fillStyle = "#eee"; g.font = "500 50px -apple-system, 'PingFang SC', sans-serif";
+      g.fillText(t, 170, y + 86);
+      g.strokeStyle = "#5a5a5e"; g.lineWidth = 6; g.lineCap = "round";
+      g.beginPath(); g.moveTo(1095, y + 66); g.lineTo(1113, y + 84); g.lineTo(1095, y + 102); g.stroke();
+      y += 168;
+    });
+    g.fillStyle = "#1a1a1a"; g.fillRect(0, 2556 - 250, 1179, 250);
+    ["#9a9a9a", "#9a9a9a", "#57c96a", "#9a9a9a"].forEach((col, i) => {
+      g.fillStyle = col; g.beginPath(); g.arc(147 + i * 295, 2556 - 180, 30, 0, Math.PI * 2); g.fill();
+    });
+    return c;
+  }
+
+  // ---------- renderer ----------
+  function render() {
+    const src = state.img;
+    const W = src.width, Hs = src.height;
+    const k = W / 1179;
+    const top = state.topPt * (W >= 1080 ? 3 : 2);
+    const stripW = 202 * k, panelW = W - stripW, s = panelW / W;
+    const H = Math.round((Hs - top) * s);
+    const c = document.createElement("canvas"); c.width = W; c.height = H;
+    const g = c.getContext("2d");
+    g.fillStyle = "#000"; g.fillRect(0, 0, W, H);
+
+    // panel with rounded right corners, square left edge
+    const R = 96 * k;
+    g.save();
+    g.beginPath();
+    g.moveTo(0, 0); g.lineTo(panelW - R, 0);
+    g.arcTo(panelW, 0, panelW, R, R);
+    g.lineTo(panelW, H - R);
+    g.arcTo(panelW, H, panelW - R, H, R);
+    g.lineTo(0, H); g.closePath(); g.clip();
+    g.imageSmoothingQuality = "high";
+    g.drawImage(src, 0, -top * s, panelW, Hs * s);
+    g.restore();
+
+    const CX = 1058 * k;
+    const rad = (a) => (a - 90) * Math.PI / 180; // a: degrees clockwise from 12 o'clock
+    const WHITE = "#ffffff", GRAY = "#424242";
+
+    // time
+    const fs = 41 * k;
+    g.fillStyle = WHITE; g.textAlign = "center"; g.textBaseline = "alphabetic";
+    g.font = `700 ${fs}px -apple-system, "SF Pro Text", "Helvetica Neue", Arial, sans-serif`;
+    g.fillText(state.time, CX, 232 * k + 0.355 * fs);
+
+    // battery ring: 240° gauge with a gap at the bottom
+    const rcx = CX, rcy = 329 * k, rm = 47.5 * k, th = 8.5 * k;
+    g.lineCap = "round"; g.lineWidth = th;
+    g.strokeStyle = GRAY; g.beginPath(); g.arc(rcx, rcy, rm, rad(240), rad(480)); g.stroke();
+    if (state.battery > 0) {
+      g.strokeStyle = WHITE; g.beginPath();
+      g.arc(rcx, rcy, rm, rad(240), rad(240 + 240 * Math.min(state.battery, 1))); g.stroke();
+    }
+    // signal dots sit in the gap
+    [210, 190, 170, 150].forEach((a, i) => {
+      const t = a * Math.PI / 180;
+      g.fillStyle = i < state.signal ? WHITE : GRAY;
+      g.beginPath(); g.arc(rcx + rm * Math.sin(t), rcy - rm * Math.cos(t), 4.8 * k, 0, Math.PI * 2); g.fill();
+    });
+
+    // wi-fi glyph
+    const ox = CX, oy = rcy + 13.5 * k;
+    g.fillStyle = WHITE; g.strokeStyle = WHITE;
+    g.beginPath(); g.moveTo(ox, oy); g.arc(ox, oy, 8 * k, rad(-45), rad(45)); g.closePath(); g.fill();
+    g.beginPath(); g.arc(ox, oy - 0.5 * k, 1.8 * k, 0, Math.PI * 2); g.fill();
+    for (const [r0, r1] of [[12.5, 19], [23.5, 30.5]]) {
+      g.lineWidth = (r1 - r0) * k;
+      g.beginPath(); g.arc(ox, oy, (r0 + r1) / 2 * k, rad(-45), rad(45)); g.stroke();
+    }
+
+    c.toBlob((blob) => {
+      if (!blob) return;
+      lastBlob = blob;
+      if (lastUrl) URL.revokeObjectURL(lastUrl);
+      lastUrl = URL.createObjectURL(blob);
+      $("result").src = lastUrl;
+    }, "image/png");
+  }
+
+  // ---------- read capture time from file metadata ----------
+  async function guessTime(file) {
+    try {
+      const buf = await file.slice(0, 262144).arrayBuffer();
+      const txt = new TextDecoder("latin1").decode(buf);
+      const m = txt.match(/(20\d\d)[:\-](\d\d)[:\-](\d\d)[ T](\d\d):(\d\d)/);
+      if (m) return `${m[4]}:${m[5]}`;
+    } catch (e) {}
+    if (file.lastModified) {
+      const d = new Date(file.lastModified);
+      return `${String(d.getHours()).padStart(2, "0")}:${String(d.getMinutes()).padStart(2, "0")}`;
+    }
+    return null;
+  }
+
+  // ---------- controls ----------
+  $("pick").addEventListener("click", () => $("file").click());
+  $("file").addEventListener("change", async (e) => {
+    const f = e.target.files && e.target.files[0];
+    if (!f) return;
+    const t = await guessTime(f);
+    if (t) { state.time = t; $("time").value = t; }
+    const url = URL.createObjectURL(f);
+    const im = new Image();
+    im.onload = () => {
+      state.img = im; state.isSample = false;
+      state.name = (f.name || "duo").replace(/\.[^.]+$/, "") + "-duo";
+      $("srcTag").textContent = `${f.name || "截图"} · ${im.naturalWidth}×${im.naturalHeight}`;
+      $("pick").textContent = "换一张截图";
+      $("msg").textContent = "时间已从截图里读取，不对可以手动改";
+      render();
+    };
+    im.onerror = () => { $("msg").textContent = "这张图打不开，换一张 PNG 或 JPG 截图试试"; };
+    im.src = url;
+    e.target.value = "";
+  });
+  $("time").addEventListener("input", (e) => { state.time = e.target.value; render(); });
+  $("battery").addEventListener("input", (e) => {
+    state.battery = e.target.value / 100; $("batteryVal").textContent = e.target.value + "%"; render();
+  });
+  function seg(id, key) {
+    $(id).addEventListener("click", (e) => {
+      const b = e.target.closest("button"); if (!b) return;
+      $(id).querySelectorAll("button").forEach((x) => x.setAttribute("aria-pressed", String(x === b)));
+      state[key] = Number(b.dataset.v); render();
+    });
+  }
+  seg("signal", "signal"); seg("topbar", "topPt");
+
+  // ---------- save ----------
+  $("save").addEventListener("click", async () => {
+    if (!lastBlob) return;
+    const file = new File([lastBlob], state.name + ".png", { type: "image/png" });
+    if (navigator.canShare && navigator.canShare({ files: [file] })) {
+      try {
+        await navigator.share({ files: [file] });
+        $("msg").textContent = "在分享面板里选「存储图像」就进相册了";
+        return;
+      } catch (err) {
+        if (err && err.name === "AbortError") { $("msg").textContent = "已取消"; return; }
+      }
+    }
+    const a = document.createElement("a");
+    a.href = lastUrl; a.download = file.name;
+    document.body.appendChild(a); a.click(); a.remove();
+    $("msg").textContent = "已下载；没反应的话长按预览图选「存储图像」";
+  });
+
+  state.img = makeSample();
+  render();
+})();
+</script>
+</body>
+</html>
