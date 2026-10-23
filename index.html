@@ -9,63 +9,65 @@
 <meta name="theme-color" content="#0b0b0d">
 <title>iPhone Duo 截图</title>
 <style>
-/* Layout: one column on phones — preview on top, controls below; two columns on wide screens */
+/* Layout: preview on top / controls below on phones; two columns on wide screens */
 :root {
   --bg: #f2f2f4; --panel: #ffffff; --fg: #141416; --muted: #6b6b73;
-  --line: #dcdce2; --accent: #2f6bff; --accent-fg: #ffffff; --stage: #e4e4ea;
+  --line: #dcdce2; --accent: #2f6bff; --accent-fg: #ffffff; --stage: #e4e4ea; --ok: #1f9d55;
   --font: -apple-system, BlinkMacSystemFont, "SF Pro Text", "PingFang SC", "Helvetica Neue", "Noto Sans SC", sans-serif;
   --mono: ui-monospace, "SF Mono", Menlo, monospace;
 }
 @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
   --bg: #0b0b0d; --panel: #17171a; --fg: #f2f2f5; --muted: #8e8e97;
-  --line: #2a2a30; --accent: #5b8bff; --accent-fg: #ffffff; --stage: #121215; color-scheme: dark } }
+  --line: #2a2a30; --accent: #5b8bff; --accent-fg: #ffffff; --stage: #121215; --ok: #3ccf7a; color-scheme: dark } }
 :root[data-theme="dark"] {
   --bg: #0b0b0d; --panel: #17171a; --fg: #f2f2f5; --muted: #8e8e97;
-  --line: #2a2a30; --accent: #5b8bff; --accent-fg: #ffffff; --stage: #121215; color-scheme: dark }
+  --line: #2a2a30; --accent: #5b8bff; --accent-fg: #ffffff; --stage: #121215; --ok: #3ccf7a; color-scheme: dark }
 body { background: var(--bg); color: var(--fg); font-family: var(--font); }
-.wrap { max-width: 980px; margin: 0 auto; padding-block: 20px 40px;
+.wrap { max-width: 1040px; margin: 0 auto; padding-block: 20px 48px;
   padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
-header { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; flex-wrap: wrap; margin-bottom: 16px; }
 h1 { font-size: 22px; margin: 0; letter-spacing: -0.01em; }
-.sub { color: var(--muted); font-size: 13px; margin: 4px 0 0; }
+.sub { color: var(--muted); font-size: 13px; margin: 4px 0 16px; }
 .grid { display: grid; grid-template-columns: 1fr; gap: 16px; }
-@media (min-width: 760px) { .grid { grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr); align-items: start; } }
+@media (min-width: 800px) { .grid { grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr); align-items: start; } }
 .stage { background: var(--stage); border-radius: 18px; padding: 16px; display: flex; flex-direction: column; align-items: center; gap: 10px; min-width: 0; }
-.stage img { display: block; max-width: 100%; max-height: 70vh; border-radius: 6px; box-shadow: 0 6px 24px rgba(0,0,0,.25); }
-.tag { font-size: 12px; color: var(--muted); }
-.panel { background: var(--panel); border: 1px solid var(--line); border-radius: 18px; padding: 16px; display: flex; flex-direction: column; gap: 16px; min-width: 0; }
+.stage img { display: block; max-width: 100%; max-height: 72vh; border-radius: 6px; box-shadow: 0 6px 24px rgba(0,0,0,.25); }
+.tag { font-size: 12px; color: var(--muted); text-align: center; }
+.panel { background: var(--panel); border: 1px solid var(--line); border-radius: 18px; padding: 16px; display: flex; flex-direction: column; gap: 18px; min-width: 0; }
 .row { display: flex; flex-direction: column; gap: 8px; }
-.row > label, .lbl, .lbl-line label { font-size: 13px; color: var(--muted); }
-.lbl-line { display: flex; justify-content: space-between; align-items: baseline; }
-.val { font-family: var(--mono); font-size: 13px; color: var(--fg); font-variant-numeric: tabular-nums; }
-input[type="text"] { font: 600 17px var(--mono); padding: 10px 12px; border-radius: 10px; border: 1px solid var(--line); background: var(--bg); color: var(--fg); width: 100%; box-sizing: border-box; }
-input[type="range"] { width: 100%; accent-color: var(--accent); }
+.lbl { font-size: 13px; color: var(--muted); display: flex; justify-content: space-between; align-items: baseline; gap: 8px; }
+.lbl b { font-weight: 500; color: var(--fg); font-family: var(--mono); font-size: 13px; font-variant-numeric: tabular-nums; }
 .seg { display: flex; border: 1px solid var(--line); border-radius: 10px; overflow: hidden; }
 .seg button { flex: 1; padding: 9px 4px; border: 0; background: transparent; color: var(--fg); font: 500 14px var(--font); cursor: pointer; }
 .seg button + button { border-left: 1px solid var(--line); }
 .seg button[aria-pressed="true"] { background: var(--accent); color: var(--accent-fg); }
+.time { display: flex; align-items: center; gap: 8px; }
+.time input, .num { font: 600 20px var(--mono); padding: 10px 0; border-radius: 10px; border: 1px solid var(--line); background: var(--bg); color: var(--fg); width: 64px; text-align: center; font-variant-numeric: tabular-nums; }
+.time .colon { font: 700 22px var(--mono); color: var(--fg); }
+.batt { display: flex; align-items: center; gap: 12px; }
+.batt input[type="range"] { flex: 1; min-width: 0; accent-color: var(--accent); }
+.num { width: 72px; font-size: 18px; }
+.toggles { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.tg { display: flex; align-items: center; justify-content: space-between; gap: 8px; padding: 10px 12px; border: 1px solid var(--line); border-radius: 10px; font-size: 14px; cursor: pointer; }
+.tg input { width: 20px; height: 20px; accent-color: var(--accent); margin: 0; }
 .btn { display: flex; align-items: center; justify-content: center; gap: 8px; padding: 14px; border-radius: 12px; font: 600 16px var(--font); border: 0; cursor: pointer; width: 100%; }
 .btn.primary { background: var(--accent); color: var(--accent-fg); }
-.btn.ghost { background: transparent; color: var(--fg); border: 1px solid var(--line); }
-.btn:focus-visible, .seg button:focus-visible, input:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
-.btn[disabled] { opacity: .45; cursor: default; }
-.actions { display: flex; flex-direction: column; gap: 10px; }
+.btn.ghost { background: transparent; color: var(--fg); border: 1px solid var(--line); padding: 11px; font-size: 15px; }
+.btn:focus-visible, .seg button:focus-visible, input:focus-visible, .tg:focus-within { outline: 2px solid var(--accent); outline-offset: 2px; }
+.detect { font-size: 13px; color: var(--muted); margin: 0; min-height: 1.2em; }
+.detect.ok { color: var(--ok); }
 .msg { font-size: 13px; color: var(--muted); min-height: 1.2em; margin: 0; }
-#file { position: absolute; width: 1px; height: 1px; opacity: 0; pointer-events: none; }
+[hidden] { display: none !important; }
+.file { position: absolute; width: 1px; height: 1px; opacity: 0; pointer-events: none; }
   :root { padding-top: env(safe-area-inset-top, 0px); padding-bottom: env(safe-area-inset-bottom, 0px); }
   body { margin: 0; font-size: 14px; }
-  [hidden] { display: none !important; }
+  img { max-width: 100%; }
 </style>
 </head>
 <body>
 
 <div class="wrap">
-  <header>
-    <div>
-      <h1>iPhone Duo 截图</h1>
-      <p class="sub">普通 iPhone 截图 → 右侧竖排状态栏的 Duo 样式，全部在手机本地处理</p>
-    </div>
-  </header>
+  <h1>iPhone Duo 截图</h1>
+  <p class="sub">普通 iPhone 截图 → 侧边状态栏的 Duo 样式（合上 / 打开）。时间和电量自动从截图读取，图片只在本机处理。</p>
 
   <div class="grid">
     <section class="stage">
@@ -74,17 +76,48 @@ input[type="range"] { width: 100%; accent-color: var(--accent); }
     </section>
 
     <section class="panel">
-      <input type="file" id="file" accept="image/*">
+      <input type="file" id="file" class="file" accept="image/*">
+      <input type="file" id="file2" class="file" accept="image/*">
       <button class="btn primary" id="pick" type="button">选择截图</button>
+      <p class="detect" id="detect"></p>
 
       <div class="row">
-        <label for="time">时间</label>
-        <input type="text" id="time" value="11:04" inputmode="numeric" maxlength="8" autocomplete="off">
+        <span class="lbl">形态</span>
+        <div class="seg" id="mode" role="group" aria-label="形态">
+          <button type="button" data-v="fold" aria-pressed="true">合上（外屏）</button>
+          <button type="button" data-v="open" aria-pressed="false">打开（内屏）</button>
+        </div>
+      </div>
+
+      <div class="row" id="layoutRow" hidden>
+        <span class="lbl">打开后的布局</span>
+        <div class="seg" id="layout" role="group" aria-label="打开后的布局">
+          <button type="button" data-v="side" aria-pressed="true">侧栏</button>
+          <button type="button" data-v="center" aria-pressed="false">居中</button>
+          <button type="button" data-v="split" aria-pressed="false">分屏</button>
+        </div>
+        <button class="btn ghost" id="pick2" type="button" hidden>选右边那张截图</button>
       </div>
 
       <div class="row">
-        <div class="lbl-line"><label for="battery">电量环</label><span class="val" id="batteryVal">45%</span></div>
-        <input type="range" id="battery" min="0" max="100" value="45">
+        <span class="lbl">时间</span>
+        <div class="time">
+          <input id="hh" type="text" inputmode="numeric" pattern="[0-9]*" maxlength="2" value="11" aria-label="小时" autocomplete="off">
+          <span class="colon">:</span>
+          <input id="mm" type="text" inputmode="numeric" pattern="[0-9]*" maxlength="2" value="04" aria-label="分钟" autocomplete="off">
+        </div>
+      </div>
+
+      <div class="row">
+        <span class="lbl">电量</span>
+        <div class="batt">
+          <input type="range" id="battery" min="0" max="100" value="45" aria-label="电量滑块">
+          <input type="text" id="batteryNum" class="num" inputmode="numeric" pattern="[0-9]*" maxlength="3" value="45" aria-label="电量百分比">
+        </div>
+        <div class="toggles">
+          <label class="tg">充电中 <input type="checkbox" id="charging"></label>
+          <label class="tg">低电量模式 <input type="checkbox" id="lowPower"></label>
+        </div>
       </div>
 
       <div class="row">
@@ -99,37 +132,521 @@ input[type="range"] { width: 100%; accent-color: var(--accent); }
       </div>
 
       <div class="row">
-        <span class="lbl">顶部状态栏裁剪</span>
-        <div class="seg" id="topbar" role="group" aria-label="状态栏高度">
-          <button type="button" data-v="59" aria-pressed="true">灵动岛机型</button>
-          <button type="button" data-v="47" aria-pressed="false">刘海机型</button>
-          <button type="button" data-v="0" aria-pressed="false">不裁</button>
+        <span class="lbl">侧边栏元素</span>
+        <div class="toggles">
+          <label class="tg">灵动岛 <input type="checkbox" id="island" checked></label>
+          <label class="tg">返回键 <input type="checkbox" id="back"></label>
         </div>
       </div>
 
-      <div class="actions">
-        <button class="btn primary" id="save" type="button">保存图片</button>
-        <p class="msg" id="msg">也可以直接长按预览图保存</p>
+      <div class="row">
+        <span class="lbl">原图顶部状态栏</span>
+        <div class="seg" id="crop" role="group" aria-label="状态栏裁剪">
+          <button type="button" data-v="1" aria-pressed="true">自动裁掉</button>
+          <button type="button" data-v="0" aria-pressed="false">保留</button>
+        </div>
       </div>
+
+      <button class="btn primary" id="save" type="button">保存图片</button>
+      <p class="msg" id="msg">也可以直接长按预览图保存</p>
     </section>
   </div>
 </div>
 
 <script>
+const Duo = (() => {
+  // All sizes in u = screen height / 100, measured from official iPhone Duo screenshots.
+  const L = {
+    FOLD: 0.689, OPEN: 1.41,              // outer / inner display aspect (w/h)
+    STRIP: 11.9, CX: 5.3, CORNER: 5.0,    // side status column width, its center, window corner radius
+    ISL_TOP: 3.3, ISL_H: 10.3, ISL_W: 6.2,
+    CAM_TOP: 4.6, CAM: 3.4, CAM_R: 0.9,
+    GRILL_Y: 10.4, GRILL_GAP: 0.56, GRILL_R: 0.16,
+    TIME_Y_ISL: 17.9, TIME_Y: 5.9, FONT: 2.45,
+    RING_DY: 5.9, RING_R: 2.82, RING_W: 0.46, GAP: 63,
+    DOT_R: 2.7, DOT: 0.24,
+    WIFI_DY: 0.62, WIFI_R: 1.84,
+    BACK_DY: 11.2, BACK_R: 3.5,
+    SPLIT_GAP: 1.0
+  };
+
+  // ---------- source status bar height ----------
+  const SB = { "1179x2556": 177, "1290x2796": 177, "1206x2622": 186, "1320x2868": 186, "1260x2736": 186,
+    "1170x2532": 141, "1284x2778": 141, "1125x2436": 132, "1242x2688": 132, "828x1792": 96,
+    "1080x2340": 150, "750x1334": 40, "1242x2208": 60, "640x1136": 40 };
+  const sizeOf = (img) => [img.naturalWidth || img.width, img.naturalHeight || img.height];
+  function statusBarPx(img) {
+    const [w, h] = sizeOf(img);
+    return SB[w + "x" + h] ?? Math.round(h * 0.069);
+  }
+
+  // ---------- glyph recognition (template matching against system fonts) ----------
+  const GW = 12, GH = 18;
+  let templates = null;
+  function vecFrom(test, x0, y0, x1, y1) {
+    const w = x1 - x0 + 1, h = y1 - y0 + 1, v = new Float32Array(GW * GH);
+    for (let gy = 0; gy < GH; gy++) for (let gx = 0; gx < GW; gx++) {
+      let s = 0;
+      for (let sy = 0; sy < 3; sy++) for (let sx = 0; sx < 3; sx++) {
+        const px = x0 + Math.min(w - 1, Math.floor((gx + (sx + 0.5) / 3) * w / GW));
+        const py = y0 + Math.min(h - 1, Math.floor((gy + (sy + 0.5) / 3) * h / GH));
+        if (test(px, py)) s++;
+      }
+      v[gy * GW + gx] = s / 9;
+    }
+    let m = 0; for (const a of v) m += a; m /= v.length;
+    let n = 0; for (let i = 0; i < v.length; i++) { v[i] -= m; n += v[i] * v[i]; }
+    n = Math.sqrt(n) || 1; for (let i = 0; i < v.length; i++) v[i] /= n;
+    return v;
+  }
+  function inkBox(test, w, h) {
+    let x0 = w, y0 = h, x1 = -1, y1 = -1;
+    for (let y = 0; y < h; y++) for (let x = 0; x < w; x++) if (test(x, y)) {
+      if (x < x0) x0 = x; if (x > x1) x1 = x; if (y < y0) y0 = y; if (y > y1) y1 = y;
+    }
+    return x1 < 0 ? null : { x0, y0, x1, y1 };
+  }
+  function buildTemplates() {
+    templates = [];
+    const S = 160, c = document.createElement("canvas"); c.width = c.height = S;
+    const g = c.getContext("2d", { willReadFrequently: true });
+    const fonts = [
+      '600 110px -apple-system, system-ui, sans-serif',
+      '700 110px -apple-system, system-ui, sans-serif',
+      '700 110px ui-rounded, "SF Pro Rounded", -apple-system, sans-serif',
+      '800 110px ui-rounded, "SF Pro Rounded", -apple-system, sans-serif',
+      'bold 110px "Helvetica Neue", Helvetica, Arial, sans-serif',
+      'bold 110px "Liberation Sans", "DejaVu Sans", Roboto, Arial, sans-serif',
+      '600 110px Inter, Roboto, "Segoe UI", Arial, sans-serif'
+    ];
+    const add = (ch) => {
+      const d = g.getImageData(0, 0, S, S).data;
+      const t = (x, y) => d[(y * S + x) * 4 + 3] > 110;
+      const b = inkBox(t, S, S); if (!b) return;
+      templates.push({ ch, vec: vecFrom(t, b.x0, b.y0, b.x1, b.y1), aspect: (b.x1 - b.x0 + 1) / (b.y1 - b.y0 + 1) });
+    };
+    g.textAlign = "center"; g.textBaseline = "middle"; g.fillStyle = "#000";
+    for (const f of fonts) for (const ch of "0123456789") {
+      g.clearRect(0, 0, S, S); g.font = f; g.fillText(ch, S / 2, S / 2); add(ch);
+    }
+    // charging bolt shapes, so they can be told apart from digits
+    for (const pts of [
+      [[.70,0],[.05,.56],[.47,.56],[.30,1],[.95,.42],[.53,.42]],
+      [[.62,0],[.10,.60],[.44,.60],[.36,1],[.90,.40],[.56,.40]]]) {
+      g.clearRect(0, 0, S, S); g.beginPath();
+      pts.forEach(([x, y], i) => { const X = 50 + x * 60, Y = 25 + y * 110; i ? g.lineTo(X, Y) : g.moveTo(X, Y); });
+      g.closePath(); g.fill(); add("bolt");
+    }
+  }
+  function classify(vec, aspect) {
+    if (!templates) buildTemplates();
+    let best = { ch: null, score: -2 };
+    for (const t of templates) {
+      let s = 0; for (let i = 0; i < vec.length; i++) s += vec[i] * t.vec[i];
+      s -= 0.35 * Math.abs(Math.log(aspect / t.aspect));
+      if (s > best.score) best = { ch: t.ch, score: s };
+    }
+    return best;
+  }
+
+  // connected components on a 0/1 mask
+  function components(mask, w, h) {
+    const lab = new Int32Array(w * h), comps = [], stack = [];
+    let id = 0;
+    for (let i = 0; i < w * h; i++) {
+      if (!mask[i] || lab[i]) continue;
+      id++; const c = { id, x0: w, y0: h, x1: -1, y1: -1, n: 0 };
+      lab[i] = id; stack.push(i);
+      while (stack.length) {
+        const p = stack.pop(), x = p % w, y = (p - x) / w;
+        c.n++; if (x < c.x0) c.x0 = x; if (x > c.x1) c.x1 = x; if (y < c.y0) c.y0 = y; if (y > c.y1) c.y1 = y;
+        for (let dy = -1; dy <= 1; dy++) for (let dx = -1; dx <= 1; dx++) {
+          const nx = x + dx, ny = y + dy;
+          if (nx < 0 || ny < 0 || nx >= w || ny >= h) continue;
+          const q = ny * w + nx;
+          if (mask[q] && !lab[q]) { lab[q] = id; stack.push(q); }
+        }
+      }
+      c.w = c.x1 - c.x0 + 1; c.h = c.y1 - c.y0 + 1; comps.push(c);
+    }
+    return { lab, comps };
+  }
+  const lumOf = (d, i) => 0.299 * d[i] + 0.587 * d[i + 1] + 0.114 * d[i + 2];
+  const satOf = (d, i) => Math.max(d[i], d[i + 1], d[i + 2]) - Math.min(d[i], d[i + 1], d[i + 2]);
+  function median(arr) { const a = Array.from(arr).sort((p, q) => p - q); return a[a.length >> 1] || 0; }
+
+  function readGlyphs(lab, w, list) {
+    return list.map((c) => {
+      const v = vecFrom((x, y) => lab[y * w + x] === c.id, c.x0, c.y0, c.x1, c.y1);
+      return classify(v, c.w / c.h);
+    });
+  }
+
+  function readTime(d, W, sb, x0, x1) {
+    const w = x1 - x0, h = sb, lum = new Float32Array(w * h), samp = [];
+    for (let y = 0; y < h; y++) for (let x = 0; x < w; x++) {
+      const v = lumOf(d, (y * W + x0 + x) * 4); lum[y * w + x] = v;
+      if ((x + y) % 5 === 0) samp.push(v);
+    }
+    const med = median(samp), dark = med < 128;
+    const thr = dark ? Math.max(150, med + 70) : Math.min(110, med - 70);
+    const mask = new Uint8Array(w * h);
+    for (let i = 0; i < w * h; i++) mask[i] = dark ? lum[i] > thr : lum[i] < thr;
+    const { lab, comps } = components(mask, w, h);
+    const cand = comps.filter((c) => c.h >= 0.11 * h && c.h <= 0.55 * h && c.w <= 1.2 * c.h && c.n >= 0.12 * c.w * c.h);
+    let best = [];
+    for (const a of cand) {
+      const grp = cand.filter((b) => Math.abs(b.y1 - a.y1) <= 0.18 * a.h && Math.abs(b.h - a.h) <= 0.22 * a.h &&
+        Math.abs((b.x0 + b.x1) / 2 - (a.x0 + a.x1) / 2) <= 5 * a.h);
+      if (grp.length > best.length) best = grp;
+    }
+    if (best.length < 3 || best.length > 4) return null;
+    best.sort((a, b) => a.x0 - b.x0);
+    const g = readGlyphs(lab, w, best);
+    if (g.some((r) => r.ch === "bolt" || r.score < 0.45)) return null;
+    const s = g.map((r) => r.ch).join("");
+    const hh = s.length === 3 ? s[0] : s.slice(0, 2), mm = s.slice(-2);
+    if (+hh > 23 || +mm > 59) return null;
+    return { hh, mm, score: g.reduce((a, r) => a + r.score, 0) / g.length };
+  }
+
+  function readBattery(d, W, sb, x0, x1) {
+    const w = x1 - x0, h = sb, samp = [];
+    for (let y = 0; y < h; y += 2) for (let x = 0; x < w; x += 3) samp.push(lumOf(d, (y * W + x0 + x) * 4));
+    const med = median(samp);
+    const mask = new Uint8Array(w * h);
+    for (let y = 0; y < h; y++) for (let x = 0; x < w; x++) {
+      const i = (y * W + x0 + x) * 4;
+      mask[y * w + x] = satOf(d, i) > 45 || Math.abs(lumOf(d, i) - med) > 32 ? 1 : 0;
+    }
+    const { comps } = components(mask, w, h);
+    const bodies = comps.filter((c) => c.w >= 1.4 * c.h && c.h >= 0.12 * h && c.h <= 0.5 * h && c.n >= 0.4 * c.w * c.h);
+    if (!bodies.length) return null;
+    const body = bodies.reduce((a, b) => (b.x1 > a.x1 ? b : a));
+    // trim the terminal nub on the right
+    let bx1 = body.x1;
+    while (bx1 > body.x0) {
+      let n = 0; for (let y = body.y0; y <= body.y1; y++) if (mask[y * w + bx1]) n++;
+      if (n >= 0.6 * body.h) break; bx1--;
+    }
+    const bx0 = body.x0, by0 = body.y0, by1 = body.y1, bw = bx1 - bx0 + 1, bh = by1 - by0 + 1;
+    const px = (x, y) => (( (by0 + y) * W) + x0 + bx0 + x) * 4;
+
+    // fill level from the colour run at the left of the battery
+    const rowRuns = (yy) => {
+      const runs = []; let cur = null, xa = 0, xb = bw - 1;
+      const on = (x) => mask[(by0 + yy) * w + bx0 + x];
+      while (xa < xb && !on(xa)) xa++;
+      while (xb > xa && !on(xb)) xb--;
+      for (let x = xa; x <= xb; x++) {
+        const i = px(x, yy), col = [d[i], d[i + 1], d[i + 2]];
+        if (cur && Math.hypot(col[0] - cur.c[0], col[1] - cur.c[1], col[2] - cur.c[2]) < 55) cur.len++;
+        else { cur = { c: col, len: 1 }; runs.push(cur); }
+      }
+      return runs.filter((r) => r.len >= 2);
+    };
+    let fill = null, fillCol = null;
+    const mid = rowRuns(Math.round(bh * 0.5));
+    if (mid.length >= 3 && mid[0].len < 0.1 * bw && Math.abs(lumOf(mid[1].c, 0) - med) < 40) {
+      const inner = bw - 2 * (mid[0].len + mid[1].len);
+      if (inner > 0) { fill = Math.min(1, mid[2].len / inner); fillCol = mid[2].c; }
+    } else {
+      const r1 = rowRuns(Math.round(bh * 0.14)), r2 = rowRuns(Math.round(bh * 0.86));
+      const f = (r) => (r.length ? r[0].len / r.reduce((a, b) => a + b.len, 0) : null);
+      if (r1.length && r2.length) { fill = (f(r1) + f(r2)) / 2; fillCol = r1[0].c; }
+    }
+    const [R, G, B] = fillCol || [255, 255, 255];
+    const charging = G > R + 40 && G > B + 30;
+    const lowPower = R > 170 && G > 140 && B < 100;
+
+    // percentage digits inside the battery
+    let ocr = null;
+    for (const kind of ["light", "dark"]) {
+      const m = new Uint8Array(bw * bh);
+      for (let y = 0; y < bh; y++) for (let x = 0; x < bw; x++) {
+        const i = px(x, y), l = lumOf(d, i);
+        m[y * bw + x] = kind === "light" ? (l > 200 && satOf(d, i) < 50) : l < 50;
+      }
+      const { lab, comps: cs } = components(m, bw, bh);
+      const glyphs = cs.filter((c) => c.x0 > 0 && c.y0 > 0 && c.x1 < bw - 1 && c.y1 < bh - 1 && c.h >= 0.4 * bh && c.w <= 1.1 * c.h)
+        .sort((a, b) => a.x0 - b.x0);
+      if (!glyphs.length || glyphs.length > 4) continue;
+      const g = readGlyphs(lab, bw, glyphs).filter((r) => r.ch !== "bolt");
+      if (!g.length || g.length > 3 || g.some((r) => r.score < 0.4)) continue;
+      const val = +g.map((r) => r.ch).join("");
+      if (val > 100) continue;
+      const score = g.reduce((a, r) => a + r.score, 0) / g.length;
+      if (!ocr || score > ocr.score) ocr = { val, score };
+    }
+    const level = ocr ? ocr.val : fill != null ? Math.round(fill * 100) : null;
+    if (level == null) return null;
+    return { level, fromDigits: !!ocr, charging, lowPower, fill };
+  }
+
+  function analyze(img) {
+    const [W, H] = sizeOf(img), sb = statusBarPx(img);
+    const c = document.createElement("canvas"); c.width = W; c.height = sb;
+    const g = c.getContext("2d", { willReadFrequently: true });
+    g.drawImage(img, 0, 0);
+    const d = g.getImageData(0, 0, W, sb).data;
+    let time = null, battery = null;
+    try { time = readTime(d, W, sb, 0, Math.round(W * 0.37)) || readTime(d, W, sb, Math.round(W * 0.33), Math.round(W * 0.67)); } catch (e) {}
+    try { battery = readBattery(d, W, sb, Math.round(W * 0.6), W); } catch (e) {}
+    return { time, battery };
+  }
+
+  // ---------- fitting a phone screenshot into a window of another aspect ----------
+  const rowCache = new WeakMap();
+  function rowInfo(img, top) {
+    const key = rowCache.get(img);
+    if (key && key.top === top) return key.info;
+    const [W, H] = sizeOf(img), Hc = H - top, CW = 128;
+    const c = document.createElement("canvas"); c.width = CW; c.height = Hc;
+    const g = c.getContext("2d", { willReadFrequently: true });
+    g.drawImage(img, 0, top, W, Hc, 0, 0, CW, Hc);
+    const d = g.getImageData(0, 0, CW, Hc).data;
+    const flat = new Uint8Array(Hc), col = new Float32Array(Hc * 3);
+    const ls = new Float32Array(CW - 6);
+    for (let y = 0; y < Hc; y++) {
+      let mn = 999, mx = -1, r = 0, gg = 0, b = 0;
+      for (let x = 3; x < CW - 3; x++) {
+        const i = (y * CW + x) * 4, l = lumOf(d, i);
+        ls[x - 3] = l; if (l < mn) mn = l; if (l > mx) mx = l;
+        r += d[i]; gg += d[i + 1]; b += d[i + 2];
+      }
+      const n = CW - 6;
+      flat[y] = mx - mn <= 6 ? 1 : 0;
+      const ml = median(ls);
+      // row "background" colour = mean of pixels near the median brightness
+      let cr = 0, cg = 0, cb = 0, cn = 0;
+      for (let x = 3; x < CW - 3; x++) {
+        const i = (y * CW + x) * 4;
+        if (Math.abs(lumOf(d, i) - ml) <= 4) { cr += d[i]; cg += d[i + 1]; cb += d[i + 2]; cn++; }
+      }
+      col[y * 3] = cn ? cr / cn : r / n; col[y * 3 + 1] = cn ? cg / cn : gg / n; col[y * 3 + 2] = cn ? cb / cn : b / n;
+    }
+    const info = { Hc, flat, col, d, CW };
+    rowCache.set(img, { top, info });
+    return info;
+  }
+  const cdist = (c, i, j) => Math.hypot(c[i * 3] - c[j * 3], c[i * 3 + 1] - c[j * 3 + 1], c[i * 3 + 2] - c[j * 3 + 2]);
+
+  function bottomBarTop(info) {
+    const { Hc, col } = info, base = Hc - 2, limit = Math.round(Hc * 0.72);
+    let last = base, miss = 0, y;
+    for (y = base; y > limit; y--) {
+      if (cdist(col, y, base) <= 8) { last = y; miss = 0; } else if (++miss >= 4) break;
+    }
+    return y > limit && last < Hc * 0.97 ? last : Math.round(Hc * 0.9);
+  }
+
+  // returns a list of source row segments [{y, h, stretch}] whose total height ≈ need
+  function planRows(img, top, need) {
+    const info = rowInfo(img, top), { Hc, flat, col } = info;
+    const R = Hc - need;
+    if (Math.abs(R) < 2) return [{ y: 0, h: Hc }];
+    if (R < 0) {
+      const b = bottomBarTop(info);
+      return [{ y: 0, h: b }, { y: b - 1, h: -R, stretch: true }, { y: b, h: Hc - b }];
+    }
+    const removed = new Uint8Array(Hc);
+    let left = R;
+    const lo = Math.round(Hc * 0.06), hi = Math.round(Hc * 0.93), runs = [];
+    for (let y = lo; y < hi; ) {
+      if (!flat[y]) { y++; continue; }
+      let e = y + 1;
+      while (e < hi && flat[e] && cdist(col, e, e - 1) <= 3) e++;
+      const len = e - y, keep = Math.max(10, Math.round(len * 0.12));
+      if (len - keep >= 6) runs.push({ s: y, len, take: len - keep });
+      y = e;
+    }
+    runs.sort((a, b) => b.take - a.take);
+    for (const r of runs) {
+      if (left <= 0) break;
+      const t = Math.min(r.take, left), s = r.s + Math.floor((r.len - t) / 2);
+      for (let y = s; y < s + t; y++) removed[y] = 1;
+      left -= t;
+    }
+    if (left > 0) {
+      // cut one more band where the rows on both sides of the cut look alike, so the join is invisible
+      const keep = [];
+      for (let y = 0; y < Hc; y++) if (!removed[y]) keep.push(y);
+      const { d, CW } = info, rowDiff = (a, b) => {
+        let s = 0;
+        for (let x = 0; x < CW; x++) {
+          const i = (a * CW + x) * 4, j = (b * CW + x) * 4;
+          s += Math.abs(d[i] - d[j]) + Math.abs(d[i + 1] - d[j + 1]) + Math.abs(d[i + 2] - d[j + 2]);
+        }
+        return s / CW;
+      };
+      const lo2 = Hc * 0.12, hi2 = Hc * 0.88;
+      let bestI = -1, bestC = Infinity;
+      for (let i = 1; i + left < keep.length; i++) {
+        if (keep[i] < lo2 || keep[i + left - 1] > hi2) continue;
+        const c = rowDiff(keep[i - 1], keep[i + left]) + rowDiff(keep[i - 2] ?? keep[i - 1], keep[i + left + 1] ?? keep[i + left]);
+        if (c < bestC - 0.01) { bestC = c; bestI = i; }
+      }
+      if (bestI < 0) bestI = Math.max(1, Math.round((keep.length - left) / 2));
+      for (let k = bestI; k < bestI + left && k < keep.length; k++) removed[keep[k]] = 1;
+    }
+    const segs = [];
+    for (let y = 0; y < Hc; ) {
+      if (removed[y]) { y++; continue; }
+      let e = y; while (e < Hc && !removed[e]) e++;
+      segs.push({ y, h: e - y }); y = e;
+    }
+    return segs;
+  }
+
+  function roundRect(g, x, y, w, h, r) {
+    const [tl, tr, br, bl] = r;
+    g.beginPath();
+    g.moveTo(x + tl, y);
+    g.lineTo(x + w - tr, y); tr ? g.arcTo(x + w, y, x + w, y + tr, tr) : g.lineTo(x + w, y);
+    g.lineTo(x + w, y + h - br); br ? g.arcTo(x + w, y + h, x + w - br, y + h, br) : g.lineTo(x + w, y + h);
+    g.lineTo(x + bl, y + h); bl ? g.arcTo(x, y + h, x, y + h - bl, bl) : g.lineTo(x, y + h);
+    g.lineTo(x, y + tl); tl ? g.arcTo(x, y, x + tl, y, tl) : g.lineTo(x, y);
+    g.closePath();
+  }
+
+  function drawFitted(g, img, top, x, y, w, h, radii) {
+    const [W] = sizeOf(img);
+    const need = Math.round(W * h / w);
+    const segs = planRows(img, top, need);
+    const total = segs.reduce((a, s) => a + s.h, 0), sy = h / total;
+    g.save(); roundRect(g, x, y, w, h, radii); g.clip();
+    let acc = 0;
+    for (const s of segs) {
+      const y0 = y + Math.round(acc * sy), y1 = y + Math.round((acc + s.h) * sy);
+      if (y1 > y0) g.drawImage(img, 0, top + s.y, W, s.stretch ? 1 : s.h, x, y0, w, y1 - y0 + (s.stretch ? 0 : 0.5));
+      acc += s.h;
+    }
+    g.restore();
+  }
+
+  function paneColor(img, top) {
+    const info = rowInfo(img, top), { Hc, flat, col } = info;
+    // most common flat-row colour = the app's background
+    const buckets = new Map();
+    for (let y = 0; y < Hc; y++) if (flat[y]) {
+      const k = [0, 1, 2].map((c) => Math.round(col[y * 3 + c] / 4) * 4).join(",");
+      buckets.set(k, (buckets.get(k) || 0) + 1);
+    }
+    let best = null, n = 0;
+    for (const [k, v] of buckets) if (v > n) { n = v; best = k; }
+    const c = best ? best.split(",").map(Number) : [24, 24, 24];
+    const l = 0.299 * c[0] + 0.587 * c[1] + 0.114 * c[2];
+    const k = l < 128 ? 7 : -7;
+    return `rgb(${c.map((v) => Math.max(0, Math.min(255, v + k))).join(",")})`;
+  }
+
+  // ---------- side status column ----------
+  function drawStrip(g, x0, u, o) {
+    const CX = x0 + L.CX * u;
+    const rad = (a) => (a - 90) * Math.PI / 180;
+    if (o.island) {
+      const iw = L.ISL_W * u, ih = L.ISL_H * u, ix = CX - iw / 2, iy = L.ISL_TOP * u;
+      roundRect(g, ix, iy, iw, ih, [iw / 2, iw / 2, iw / 2, iw / 2]);
+      g.fillStyle = "#000"; g.fill();
+      g.lineWidth = 0.22 * u; g.strokeStyle = "#232325"; g.stroke();
+      const cs = L.CAM * u, cr = L.CAM_R * u;
+      roundRect(g, CX - cs / 2, L.CAM_TOP * u, cs, cs, [cr, cr, cr, cr]);
+      g.fillStyle = "#1b1b1d"; g.fill();
+      g.fillStyle = "#4d4d50";
+      for (let i = -2; i <= 2; i++) { g.beginPath(); g.arc(CX + i * L.GRILL_GAP * u, L.GRILL_Y * u, L.GRILL_R * u, 0, Math.PI * 2); g.fill(); }
+    }
+    const ty = (o.island ? L.TIME_Y_ISL : L.TIME_Y) * u, fs = L.FONT * u;
+    g.fillStyle = "#fff"; g.textAlign = "center"; g.textBaseline = "alphabetic";
+    g.font = `600 ${fs}px -apple-system, "SF Pro Text", "Helvetica Neue", Arial, sans-serif`;
+    g.fillText(o.time, CX, ty + 0.355 * fs);
+
+    const cy = ty + L.RING_DY * u, rm = L.RING_R * u, a0 = 180 + L.GAP, span = 360 - 2 * L.GAP;
+    const lvl = Math.max(0, Math.min(100, o.battery)) / 100;
+    const ringCol = o.charging ? "#30d158" : o.lowPower ? "#ffd60a" : lvl <= 0.2 ? "#ff453a" : "#ffffff";
+    g.lineCap = "round"; g.lineWidth = L.RING_W * u;
+    g.strokeStyle = "#424244"; g.beginPath(); g.arc(CX, cy, rm, rad(a0), rad(a0 + span)); g.stroke();
+    if (lvl > 0) { g.strokeStyle = ringCol; g.beginPath(); g.arc(CX, cy, rm, rad(a0), rad(a0 + span * lvl)); g.stroke(); }
+    [212, 190, 170, 148].forEach((a, i) => {
+      const t = a * Math.PI / 180;
+      g.fillStyle = i < o.signal ? "#fff" : "#3f3f41";
+      g.beginPath(); g.arc(CX + L.DOT_R * u * Math.sin(t), cy - L.DOT_R * u * Math.cos(t), L.DOT * u, 0, Math.PI * 2); g.fill();
+    });
+    // wi-fi
+    const oy = cy + L.WIFI_DY * u, R = L.WIFI_R * u;
+    g.fillStyle = "#fff"; g.strokeStyle = "#fff";
+    g.beginPath(); g.moveTo(CX, oy); g.arc(CX, oy, 0.27 * R, rad(-45), rad(45)); g.closePath(); g.fill();
+    g.beginPath(); g.arc(CX, oy - 0.02 * R, 0.06 * R, 0, Math.PI * 2); g.fill();
+    for (const [r0, r1] of [[0.41, 0.62], [0.77, 1.0]]) {
+      g.lineWidth = (r1 - r0) * R; g.beginPath(); g.arc(CX, oy, (r0 + r1) / 2 * R, rad(-45), rad(45)); g.stroke();
+    }
+    if (o.back) {
+      const by = cy + L.BACK_DY * u, br = L.BACK_R * u;
+      g.beginPath(); g.arc(CX, by, br, 0, Math.PI * 2);
+      g.fillStyle = "#1c1c1e"; g.fill(); g.lineWidth = 0.15 * u; g.strokeStyle = "#3a3a3c"; g.stroke();
+      g.beginPath(); g.moveTo(CX + 0.45 * u, by - 1.25 * u); g.lineTo(CX - 0.75 * u, by); g.lineTo(CX + 0.45 * u, by + 1.25 * u);
+      g.lineWidth = 0.36 * u; g.lineJoin = "round"; g.strokeStyle = "#fff"; g.stroke();
+    }
+  }
+
+  function render(o) {
+    const img = o.img, [W, Hs] = sizeOf(img);
+    const top = o.crop ? statusBarPx(img) : 0;
+    const H = Math.round(W / L.FOLD), u = H / 100;
+    const CW = o.open ? Math.round(H * L.OPEN) : W;
+    const c = document.createElement("canvas"); c.width = CW; c.height = H;
+    const g = c.getContext("2d");
+    g.imageSmoothingQuality = "high";
+    g.fillStyle = "#000"; g.fillRect(0, 0, CW, H);
+    const strip = L.STRIP * u, areaW = CW - strip, R = L.CORNER * u;
+    if (!o.open) {
+      drawFitted(g, img, top, 0, 0, areaW, H, [0, R, R, 0]);
+    } else if (o.layout === "center") {
+      const ww = W - strip;
+      drawFitted(g, img, top, Math.round((areaW - ww) / 2), 0, ww, H, [R, R, R, R]);
+    } else if (o.layout === "split") {
+      const gap = L.SPLIT_GAP * u, pw = (areaW - gap) / 2;
+      const img2 = o.img2 || img, top2 = o.img2 ? (o.crop ? statusBarPx(img2) : 0) : top;
+      drawFitted(g, img, top, 0, 0, pw, H, [0, R, R, 0]);
+      drawFitted(g, img2, top2, pw + gap, 0, pw, H, [R, R, R, R]);
+      const hw = 0.42 * u, hh = 5 * u;
+      roundRect(g, pw + gap / 2 - hw / 2, H / 2 - hh / 2, hw, hh, [hw / 2, hw / 2, hw / 2, hw / 2]);
+      g.fillStyle = "#5a5a5e"; g.fill();
+    } else {
+      g.save(); roundRect(g, 0, 0, areaW, H, [0, R, R, 0]); g.clip();
+      g.fillStyle = paneColor(img, top); g.fillRect(0, 0, areaW, H);
+      const colW = Math.round(W * H / (Hs - top));
+      g.drawImage(img, 0, top, W, Hs - top, 0, 0, colW, H);
+      g.restore();
+    }
+    drawStrip(g, areaW, u, o);
+    return c;
+  }
+
+  return { analyze, render, statusBarPx };
+})();
+
+// ================= page =================
 (() => {
   const $ = (id) => document.getElementById(id);
-  const state = { img: null, isSample: true, time: "11:04", battery: 0.45, signal: 0, topPt: 59, name: "duo" };
-  let lastBlob = null, lastUrl = null;
+  const st = { img: null, img2: null, open: false, layout: "side", crop: true, signal: 0,
+    island: true, back: false, charging: false, lowPower: false, battery: 45, name: "duo", sample: true };
+  let lastBlob = null, lastUrl = null, pending = false;
 
-  // ---------- sample screenshot (1179×2556, dark list UI) ----------
+  // sample screenshot with a real-looking status bar so auto-detect has something to read
   function makeSample() {
     const c = document.createElement("canvas"); c.width = 1179; c.height = 2556;
     const g = c.getContext("2d");
-    g.fillStyle = "#111111"; g.fillRect(0, 0, 1179, 2556);
-    g.fillStyle = "#fff"; g.font = "600 51px -apple-system, sans-serif"; g.textBaseline = "middle";
-    g.fillText("11:04", 120, 90);
-    g.textAlign = "center"; g.font = "600 52px -apple-system, 'PingFang SC', sans-serif";
-    g.fillText("示例", 590, 250);
+    g.fillStyle = "#111"; g.fillRect(0, 0, 1179, 2556);
+    g.fillStyle = "#fff"; g.textAlign = "center"; g.textBaseline = "middle";
+    g.font = "600 52px -apple-system, system-ui, sans-serif"; g.fillText("11:04", 176, 89);
+    g.fillStyle = "#000"; g.beginPath(); g.roundRect ? g.roundRect(395, 33, 389, 112, 56) : g.rect(395, 33, 389, 112); g.fill();
+    // battery with percentage
+    g.fillStyle = "#5a5a5c"; g.beginPath(); g.roundRect ? g.roundRect(1008, 68, 70, 38, 12) : g.rect(1008, 68, 70, 38); g.fill();
+    g.save(); g.beginPath(); g.rect(1008, 68, 70 * 0.45, 38); g.clip();
+    g.fillStyle = "#fff"; g.beginPath(); g.roundRect ? g.roundRect(1008, 68, 70, 38, 12) : g.rect(1008, 68, 70, 38); g.fill(); g.restore();
+    g.fillStyle = "#5a5a5c"; g.fillRect(1081, 80, 5, 14);
+    g.font = "700 30px ui-rounded, -apple-system, system-ui, sans-serif"; g.fillStyle = "#111"; g.fillText("45", 1043, 88);
+    g.font = "600 52px -apple-system, 'PingFang SC', sans-serif"; g.fillStyle = "#fff"; g.fillText("示例", 590, 255);
     const items = [["#e9634f","相册"],["#f2a33a","日历"],["#4cb3ff","天气"],["#57c96a","地图"],["#a77bff","备忘录"],["#ff6b8f","音乐"],["#3fd0c9","健康"]];
     let y = 380;
     items.forEach(([col, t], i) => {
@@ -149,144 +666,136 @@ input[type="range"] { width: 100%; accent-color: var(--accent); }
     return c;
   }
 
-  // ---------- renderer ----------
+  const pad2 = (s) => String(s).padStart(2, "0");
+  function timeStr() {
+    const h = $("hh").value.replace(/\D/g, "") || "0", m = $("mm").value.replace(/\D/g, "") || "0";
+    return `${h}:${pad2(+m)}`;
+  }
+  function setBattery(v) {
+    v = Math.max(0, Math.min(100, Math.round(+v || 0)));
+    st.battery = v; $("battery").value = v; $("batteryNum").value = v;
+  }
+
   function render() {
-    const src = state.img;
-    const W = src.width, Hs = src.height;
-    const k = W / 1179;
-    const top = state.topPt * (W >= 1080 ? 3 : 2);
-    const stripW = 202 * k, panelW = W - stripW, s = panelW / W;
-    const H = Math.round((Hs - top) * s);
-    const c = document.createElement("canvas"); c.width = W; c.height = H;
-    const g = c.getContext("2d");
-    g.fillStyle = "#000"; g.fillRect(0, 0, W, H);
-
-    // panel with rounded right corners, square left edge
-    const R = 96 * k;
-    g.save();
-    g.beginPath();
-    g.moveTo(0, 0); g.lineTo(panelW - R, 0);
-    g.arcTo(panelW, 0, panelW, R, R);
-    g.lineTo(panelW, H - R);
-    g.arcTo(panelW, H, panelW - R, H, R);
-    g.lineTo(0, H); g.closePath(); g.clip();
-    g.imageSmoothingQuality = "high";
-    g.drawImage(src, 0, -top * s, panelW, Hs * s);
-    g.restore();
-
-    const CX = 1058 * k;
-    const rad = (a) => (a - 90) * Math.PI / 180; // a: degrees clockwise from 12 o'clock
-    const WHITE = "#ffffff", GRAY = "#424242";
-
-    // time
-    const fs = 41 * k;
-    g.fillStyle = WHITE; g.textAlign = "center"; g.textBaseline = "alphabetic";
-    g.font = `700 ${fs}px -apple-system, "SF Pro Text", "Helvetica Neue", Arial, sans-serif`;
-    g.fillText(state.time, CX, 232 * k + 0.355 * fs);
-
-    // battery ring: 240° gauge with a gap at the bottom
-    const rcx = CX, rcy = 329 * k, rm = 47.5 * k, th = 8.5 * k;
-    g.lineCap = "round"; g.lineWidth = th;
-    g.strokeStyle = GRAY; g.beginPath(); g.arc(rcx, rcy, rm, rad(240), rad(480)); g.stroke();
-    if (state.battery > 0) {
-      g.strokeStyle = WHITE; g.beginPath();
-      g.arc(rcx, rcy, rm, rad(240), rad(240 + 240 * Math.min(state.battery, 1))); g.stroke();
-    }
-    // signal dots sit in the gap
-    [210, 190, 170, 150].forEach((a, i) => {
-      const t = a * Math.PI / 180;
-      g.fillStyle = i < state.signal ? WHITE : GRAY;
-      g.beginPath(); g.arc(rcx + rm * Math.sin(t), rcy - rm * Math.cos(t), 4.8 * k, 0, Math.PI * 2); g.fill();
+    if (pending) return; pending = true;
+    requestAnimationFrame(() => {
+      pending = false;
+      if (!st.img) return;
+      const c = Duo.render({ img: st.img, img2: st.img2, open: st.open, layout: st.layout, crop: st.crop,
+        time: timeStr(), battery: st.battery, charging: st.charging, lowPower: st.lowPower,
+        signal: st.signal, island: st.island, back: st.back });
+      c.toBlob((blob) => {
+        if (!blob) return;
+        lastBlob = blob;
+        if (lastUrl) URL.revokeObjectURL(lastUrl);
+        lastUrl = URL.createObjectURL(blob);
+        $("result").src = lastUrl;
+      }, "image/png");
+      const [w, h] = [st.img.naturalWidth || st.img.width, st.img.naturalHeight || st.img.height];
+      $("srcTag").textContent = `${st.sample ? "示例截图" : st.name} · ${w}×${h} → ${c.width}×${c.height}` +
+        (st.open && st.layout === "split" && !st.img2 ? " · 分屏右边暂用同一张" : "");
     });
-
-    // wi-fi glyph
-    const ox = CX, oy = rcy + 13.5 * k;
-    g.fillStyle = WHITE; g.strokeStyle = WHITE;
-    g.beginPath(); g.moveTo(ox, oy); g.arc(ox, oy, 8 * k, rad(-45), rad(45)); g.closePath(); g.fill();
-    g.beginPath(); g.arc(ox, oy - 0.5 * k, 1.8 * k, 0, Math.PI * 2); g.fill();
-    for (const [r0, r1] of [[12.5, 19], [23.5, 30.5]]) {
-      g.lineWidth = (r1 - r0) * k;
-      g.beginPath(); g.arc(ox, oy, (r0 + r1) / 2 * k, rad(-45), rad(45)); g.stroke();
-    }
-
-    c.toBlob((blob) => {
-      if (!blob) return;
-      lastBlob = blob;
-      if (lastUrl) URL.revokeObjectURL(lastUrl);
-      lastUrl = URL.createObjectURL(blob);
-      $("result").src = lastUrl;
-    }, "image/png");
   }
 
-  // ---------- read capture time from file metadata ----------
-  async function guessTime(file) {
-    try {
-      const buf = await file.slice(0, 262144).arrayBuffer();
-      const txt = new TextDecoder("latin1").decode(buf);
-      const m = txt.match(/(20\d\d)[:\-](\d\d)[:\-](\d\d)[ T](\d\d):(\d\d)/);
-      if (m) return `${m[4]}:${m[5]}`;
-    } catch (e) {}
-    if (file.lastModified) {
-      const d = new Date(file.lastModified);
-      return `${String(d.getHours()).padStart(2, "0")}:${String(d.getMinutes()).padStart(2, "0")}`;
+  function applyDetect(img, file) {
+    const r = Duo.analyze(img), got = [];
+    if (r.time) { $("hh").value = r.time.hh; $("mm").value = r.time.mm; got.push(`时间 ${r.time.hh}:${r.time.mm}`); }
+    if (r.battery) {
+      setBattery(r.battery.level);
+      st.charging = r.battery.charging; st.lowPower = r.battery.lowPower;
+      $("charging").checked = st.charging; $("lowPower").checked = st.lowPower;
+      got.push(`电量 ${r.battery.level}%${r.battery.charging ? "·充电中" : ""}${r.battery.lowPower ? "·低电量模式" : ""}`);
     }
-    return null;
+    const el = $("detect");
+    if (r.time && r.battery) { el.textContent = "已从截图读取：" + got.join("，"); el.className = "detect ok"; }
+    else {
+      if (!r.time && file && file.lastModified) {
+        const d = new Date(file.lastModified); $("hh").value = pad2(d.getHours()); $("mm").value = pad2(d.getMinutes());
+      }
+      el.textContent = (got.length ? "已读取：" + got.join("，") + "；" : "") +
+        (!r.time ? "时间没认出来，" : "") + (!r.battery ? "电量没认出来，" : "") + "可以手动改";
+      el.className = "detect";
+    }
   }
 
-  // ---------- controls ----------
-  $("pick").addEventListener("click", () => $("file").click());
-  $("file").addEventListener("change", async (e) => {
-    const f = e.target.files && e.target.files[0];
-    if (!f) return;
-    const t = await guessTime(f);
-    if (t) { state.time = t; $("time").value = t; }
-    const url = URL.createObjectURL(f);
-    const im = new Image();
-    im.onload = () => {
-      state.img = im; state.isSample = false;
-      state.name = (f.name || "duo").replace(/\.[^.]+$/, "") + "-duo";
-      $("srcTag").textContent = `${f.name || "截图"} · ${im.naturalWidth}×${im.naturalHeight}`;
-      $("pick").textContent = "换一张截图";
-      $("msg").textContent = "时间已从截图里读取，不对可以手动改";
-      render();
-    };
+  function loadFile(f, cb) {
+    const url = URL.createObjectURL(f), im = new Image();
+    im.onload = () => cb(im);
     im.onerror = () => { $("msg").textContent = "这张图打不开，换一张 PNG 或 JPG 截图试试"; };
     im.src = url;
+  }
+
+  $("pick").addEventListener("click", () => $("file").click());
+  $("pick2").addEventListener("click", () => $("file2").click());
+  $("file").addEventListener("change", (e) => {
+    const f = e.target.files && e.target.files[0]; if (!f) return;
+    loadFile(f, (im) => {
+      st.img = im; st.sample = false;
+      st.name = (f.name || "duo").replace(/\.[^.]+$/, "");
+      $("pick").textContent = "换一张截图";
+      applyDetect(im, f); render();
+    });
     e.target.value = "";
   });
-  $("time").addEventListener("input", (e) => { state.time = e.target.value; render(); });
-  $("battery").addEventListener("input", (e) => {
-    state.battery = e.target.value / 100; $("batteryVal").textContent = e.target.value + "%"; render();
+  $("file2").addEventListener("change", (e) => {
+    const f = e.target.files && e.target.files[0]; if (!f) return;
+    loadFile(f, (im) => { st.img2 = im; $("pick2").textContent = "换右边那张截图"; render(); });
+    e.target.value = "";
   });
-  function seg(id, key) {
+
+  // time: digits only, fixed colon, jump to minutes after two digits
+  $("hh").addEventListener("input", (e) => {
+    e.target.value = e.target.value.replace(/\D/g, "").slice(0, 2);
+    if (e.target.value.length === 2) $("mm").focus();
+    render();
+  });
+  $("mm").addEventListener("input", (e) => { e.target.value = e.target.value.replace(/\D/g, "").slice(0, 2); render(); });
+  $("mm").addEventListener("blur", (e) => { if (e.target.value.length === 1) e.target.value = pad2(e.target.value); render(); });
+  $("battery").addEventListener("input", (e) => { setBattery(e.target.value); render(); });
+  $("batteryNum").addEventListener("input", (e) => {
+    const v = e.target.value.replace(/\D/g, "").slice(0, 3); e.target.value = v;
+    if (v !== "") { st.battery = Math.min(100, +v); $("battery").value = st.battery; render(); }
+  });
+  for (const id of ["charging", "lowPower", "island", "back"]) {
+    $(id).addEventListener("change", (e) => { st[id] = e.target.checked; render(); });
+  }
+  function seg(id, fn) {
     $(id).addEventListener("click", (e) => {
       const b = e.target.closest("button"); if (!b) return;
       $(id).querySelectorAll("button").forEach((x) => x.setAttribute("aria-pressed", String(x === b)));
-      state[key] = Number(b.dataset.v); render();
+      fn(b.dataset.v); render();
     });
   }
-  seg("signal", "signal"); seg("topbar", "topPt");
+  seg("mode", (v) => { st.open = v === "open"; $("layoutRow").hidden = !st.open; });
+  seg("layout", (v) => { st.layout = v; $("pick2").hidden = v !== "split"; });
+  seg("signal", (v) => { st.signal = +v; });
+  seg("crop", (v) => { st.crop = v === "1"; });
 
-  // ---------- save ----------
+  // save
+  let downloads = null;
+  try { if (window.claude && window.claude.use) window.claude.use("downloads").then((d) => { downloads = d; }).catch(() => {}); } catch (e) {}
   $("save").addEventListener("click", async () => {
     if (!lastBlob) return;
-    const file = new File([lastBlob], state.name + ".png", { type: "image/png" });
-    if (navigator.canShare && navigator.canShare({ files: [file] })) {
-      try {
-        await navigator.share({ files: [file] });
-        $("msg").textContent = "在分享面板里选「存储图像」就进相册了";
-        return;
-      } catch (err) {
-        if (err && err.name === "AbortError") { $("msg").textContent = "已取消"; return; }
-      }
+    const fname = `${st.name}-duo-${st.open ? "open" : "fold"}.png`;
+    if (downloads) {
+      try { await downloads.save({ filename: fname, data: lastBlob }); $("msg").textContent = "已交给系统保存"; }
+      catch (err) { $("msg").textContent = err && err.code === "declined" ? "已取消保存" : "保存没成功，长按预览图选「存储图像」"; }
+      return;
     }
-    const a = document.createElement("a");
-    a.href = lastUrl; a.download = file.name;
+    const file = new File([lastBlob], fname, { type: "image/png" });
+    if (navigator.canShare && navigator.canShare({ files: [file] })) {
+      try { await navigator.share({ files: [file] }); $("msg").textContent = "在分享面板里选「存储图像」就进相册了"; return; }
+      catch (err) { if (err && err.name === "AbortError") { $("msg").textContent = "已取消"; return; } }
+    }
+    const a = document.createElement("a"); a.href = lastUrl; a.download = fname;
     document.body.appendChild(a); a.click(); a.remove();
     $("msg").textContent = "已下载；没反应的话长按预览图选「存储图像」";
   });
 
-  state.img = makeSample();
+  window.__duo = { Duo, st, render, applyDetect };
+  const sample = makeSample();
+  st.img = sample;
+  applyDetect(sample, null);
   render();
 })();
 </script>
